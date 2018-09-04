@@ -1,6 +1,6 @@
-__author__ = "Jakob Aungiers"
-__copyright__ = "Jakob Aungiers 2018"
-__version__ = "2.0.0"
+__author__ = "Capri Lee"
+__copyright__ = "Capri Lee 2018"
+__version__ = "1.0.0"
 __license__ = "MIT"
 
 import os
