@@ -43,6 +43,7 @@ def main():
 	model.build_model(configs)
 	x, y = data.get_train_data(
 		seq_len = configs['data']['sequence_length'],
+		ndim=configs['model']['layers'][0]['input_dim'],
 		normalise = configs['data']['normalise']
 	)
 
@@ -60,6 +61,7 @@ def main():
 	model.train_generator(
 		data_gen = data.generate_train_batch(
 			seq_len = configs['data']['sequence_length'],
+			ndim=configs['model']['layers'][0]['input_dim'],
 			batch_size = configs['training']['batch_size'],
 			normalise = configs['data']['normalise']
 		),
@@ -70,6 +72,7 @@ def main():
 	
 	x_test, y_test = data.get_test_data(
 		seq_len = configs['data']['sequence_length'],
+		ndim = configs['model']['layers'][0]['input_dim'],
 		normalise = configs['data']['normalise']
 	)
 
