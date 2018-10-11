@@ -1,5 +1,4 @@
 *.pyc
 *.json
-saved_models
 .idea
 .ipynb_checkpoints

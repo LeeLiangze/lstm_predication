@@ -6,8 +6,8 @@ class DataLoader():
 	"""A class for loading and transforming data for the lstm model"""
 
 	def __init__(self, filename, split, cols):
-		df = pd.read_csv(filename).get(cols)
-		df = df[df.values != 0]
+		df = pd.read_csv(filename,header=None, sep=" ").get(cols)
+		# df = df[df.values != 0]
 		i_split = int(len(df) * split)
 		self.data_train = df.get(cols).values[:i_split]
 		self.data_test  = df.get(cols).values[i_split:]
@@ -25,7 +25,6 @@ class DataLoader():
 		for i in range(self.len_test - seq_len):
 			data_windows.append(self.data_test[i:i+seq_len])
 		data_windows = np.array(data_windows).astype(float)
-		data_windows = self.normalise_windows(data_windows, ndim, single_window=False) if normalise else data_windows
 
 		x = data_windows[:, :-1]
 		if ndim == 1:
@@ -33,9 +32,8 @@ class DataLoader():
 			y = data_windows[:, -1]
 		else:
 			# dim > 1
-			y = data_windows[:, -1, [0]]
+			y = data_windows[:, -1]
 		#x = x.reshape(1, x.shape[0], x.shape[1])
-
 		return x,y
 
 	def get_train_data(self, seq_len, ndim, normalise):
@@ -50,7 +48,6 @@ class DataLoader():
 			x, y = self._next_window(i, seq_len, ndim, normalise)
 			data_x.append(x)
 			data_y.append(y)
-
 		return np.array(data_x), np.array(data_y)
 
 	def generate_train_batch(self, seq_len, ndim, batch_size, normalise):
@@ -79,7 +76,7 @@ class DataLoader():
 			y = window[-1]
 		else:
 			# dim > 1
-			y = window[-1, [0]]
+			y = window[-1, :]
 		return x, y
 
 	def normalise_windows(self, window_data, ndim, single_window=False):

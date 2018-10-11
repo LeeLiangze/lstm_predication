@@ -37,8 +37,8 @@ class Model():
 			if layer['type'] == 'dropout':
 				self.model.add(Dropout(dropout_rate))
 
-		self.model.compile(loss=configs['model']['loss'], optimizer=configs['model']['optimizer'])
-
+		self.model.compile(loss=configs['model']['loss'], optimizer=configs['model']['optimizer'], metrics=["accuracy"])
+		print(self.model.summary())
 		print('[Model] Model Compiled')
 		timer.stop()
 
@@ -89,7 +89,7 @@ class Model():
 	def predict_point_by_point(self, data):
 		#Predict each timestep given the last sequence of true data, in effect only predicting 1 step ahead each time
 		predicted = self.model.predict(data)
-		predicted = np.reshape(predicted, (predicted.size,))
+		# predicted = np.reshape(predicted, (predicted.size,))
 		return predicted
 
 	def predict_sequences_multiple(self, data, window_size, prediction_len):
