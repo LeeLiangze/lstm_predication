@@ -62,7 +62,7 @@ def main():
     predictions = model.predict_sequences_multiple(x, configs['data']['sequence_length'],configs['data']['sequence_length'])
     # predictions = model.predict_sequence_full(x_test, configs['data']['sequence_length'])
     # predictions = model.predict_point_by_point(x)
-    print(predictions)
+    print(predictions[-10:])
 
 # plot_results_multiple(predictions, y_test, configs['data']['sequence_length'])
 # plot_results(predictions, y_test)

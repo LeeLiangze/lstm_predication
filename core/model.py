@@ -80,7 +80,7 @@ class Model():
 			steps_per_epoch=steps_per_epoch,
 			epochs=epochs,
 			callbacks=callbacks,
-			workers=1
+			workers=10
 		)
 		
 		print('[Model] Training Completed. Model saved as %s' % save_fname)
