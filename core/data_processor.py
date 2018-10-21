@@ -25,6 +25,7 @@ class DataLoader():
 		for i in range(self.len_test - seq_len):
 			data_windows.append(self.data_test[i:i+seq_len])
 		data_windows = np.array(data_windows).astype(float)
+		data_windows = self.normalise_windows(data_windows, single_window=False) if normalise else data_windows
 
 		x = data_windows[:, :-1]
 		if ndim == 1:
@@ -60,6 +61,7 @@ class DataLoader():
 				if i >= (self.len_train - seq_len):
 					# stop-condition for a smaller final batch if data doesn't divide evenly
 					yield np.array(x_batch), np.array(y_batch)
+					i=0
 				x, y = self._next_window(i, seq_len, ndim, normalise)
 				x_batch.append(x)
 				y_batch.append(y)

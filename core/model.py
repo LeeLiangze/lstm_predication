@@ -37,18 +37,18 @@ class Model():
 			if layer['type'] == 'dropout':
 				self.model.add(Dropout(dropout_rate))
 
-		self.model.compile(loss=configs['model']['loss'], optimizer=configs['model']['optimizer'], metrics=["accuracy"])
+		self.model.compile(loss=configs['model']['loss'], optimizer=configs['model']['optimizer'])
 		print(self.model.summary())
 		print('[Model] Model Compiled')
 		timer.stop()
 
-	def train(self, x, y, epochs, batch_size):
+	def train(self, x, y, epochs, batch_size, save_dir):
 		timer = Timer()
 		timer.start()
 		print('[Model] Training Started')
 		print('[Model] %s epochs, %s batch size' % (epochs, batch_size))
 		
-		save_fname = 'saved_models/%s-e%s.h5' % (dt.datetime.now().strftime('%d%m%Y-%H%M%S'), str(epochs))
+		save_fname = os.path.join(save_dir, '%s-e%s.h5' % (dt.datetime.now().strftime('%d%m%Y-%H%M%S'), str(epochs)))
 		callbacks = [
 			EarlyStopping(monitor='val_loss', patience=2),
 			ModelCheckpoint(filepath=save_fname, monitor='val_loss', save_best_only=True)
@@ -65,13 +65,13 @@ class Model():
 		print('[Model] Training Completed. Model saved as %s' % save_fname)
 		timer.stop()
 
-	def train_generator(self, data_gen, epochs, batch_size, steps_per_epoch):
+	def train_generator(self, data_gen, epochs, batch_size, steps_per_epoch, save_dir):
 		timer = Timer()
 		timer.start()
 		print('[Model] Training Started')
 		print('[Model] %s epochs, %s batch size, %s batches per epoch' % (epochs, batch_size, steps_per_epoch))
 		
-		save_fname = 'saved_models/%s-e%s.h5' % (dt.datetime.now().strftime('%d%m%Y-%H%M%S'), str(epochs))
+		save_fname = os.path.join(save_dir, '%s-e%s.h5' % (dt.datetime.now().strftime('%d%m%Y-%H%M%S'), str(epochs)))
 		callbacks = [
 			ModelCheckpoint(filepath=save_fname, monitor='loss', save_best_only=True)
 		]
@@ -88,18 +88,20 @@ class Model():
 
 	def predict_point_by_point(self, data):
 		#Predict each timestep given the last sequence of true data, in effect only predicting 1 step ahead each time
+		print('[Model] Predicting Point-by-Point...')
 		predicted = self.model.predict(data)
-		# predicted = np.reshape(predicted, (predicted.size,))
+		predicted = np.reshape(predicted, (predicted.size,))
 		return predicted
 
 	def predict_sequences_multiple(self, data, window_size, prediction_len):
 		#Predict sequence of 50 steps before shifting prediction run forward by 50 steps
+		print('[Model] Predicting Sequences Multiple...')
 		prediction_seqs = []
 		for i in range(int(len(data)/prediction_len)):
 			curr_frame = data[i*prediction_len]
 			predicted = []
 			for j in range(prediction_len):
-				predicted.append(self.model.predict(curr_frame[newaxis,:,:])[0,0])
+				predicted.append(self.model.predict(curr_frame[newaxis,:,:])[0,:])
 				curr_frame = curr_frame[1:]
 				curr_frame = np.insert(curr_frame, [window_size-2], predicted[-1], axis=0)
 			prediction_seqs.append(predicted)
@@ -107,6 +109,7 @@ class Model():
 
 	def predict_sequence_full(self, data, window_size):
 		#Shift the window by 1 new prediction each time, re-run predictions on new window
+		print('[Model] Predicting Sequences Full...')
 		curr_frame = data[0]
 		predicted = []
 		for i in range(len(data)):
