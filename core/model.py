@@ -80,7 +80,7 @@ class Model():
 			steps_per_epoch=steps_per_epoch,
 			epochs=epochs,
 			callbacks=callbacks,
-			workers=10
+			workers=1
 		)
 		
 		print('[Model] Training Completed. Model saved as %s' % save_fname)
@@ -98,12 +98,15 @@ class Model():
 		print('[Model] Predicting Sequences Multiple...')
 		prediction_seqs = []
 		for i in range(int(len(data)/prediction_len)):
-			curr_frame = data[i*prediction_len]
+			curr_frame = data[i*prediction_len].astype(float)
 			predicted = []
 			for j in range(prediction_len):
 				predicted.append(self.model.predict(curr_frame[newaxis,:,:])[0,:])
 				curr_frame = curr_frame[1:]
+				print('1111',curr_frame)
 				curr_frame = np.insert(curr_frame, [window_size-2], predicted[-1], axis=0)
+				print('2222',curr_frame)
+				exit()
 			prediction_seqs.append(predicted)
 		return prediction_seqs
 
