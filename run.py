@@ -7,7 +7,7 @@ import os
 import json
 import time
 import math
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from core.data_processor import DataLoader
 from core.model import Model
 
@@ -62,7 +62,7 @@ def main():
     predictions = model.predict_sequences_multiple(x, configs['data']['sequence_length'],configs['data']['sequence_length'])
     # predictions = model.predict_sequence_full(x_test, configs['data']['sequence_length'])
     # predictions = model.predict_point_by_point(x)
-    print(predictions[-10:])
+    print(predictions[-1])
 
 # plot_results_multiple(predictions, y_test, configs['data']['sequence_length'])
 # plot_results(predictions, y_test)

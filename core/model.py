@@ -103,10 +103,7 @@ class Model():
 			for j in range(prediction_len):
 				predicted.append(self.model.predict(curr_frame[newaxis,:,:])[0,:])
 				curr_frame = curr_frame[1:]
-				print('1111',curr_frame)
 				curr_frame = np.insert(curr_frame, [window_size-2], predicted[-1], axis=0)
-				print('2222',curr_frame)
-				exit()
 			prediction_seqs.append(predicted)
 		return prediction_seqs
 

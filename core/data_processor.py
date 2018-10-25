@@ -6,7 +6,7 @@ class DataLoader():
 	"""A class for loading and transforming data for the lstm model"""
 
 	def __init__(self, filename, split, cols):
-		df = pd.read_csv(filename,header=None, sep=" ").get(cols)
+		df = pd.read_csv(filename)
 		# df = df[df.values != 0]
 		i_split = int(len(df) * split)
 		self.data_train = df.get(cols).values[:i_split]
@@ -63,6 +63,8 @@ class DataLoader():
 					yield np.array(x_batch), np.array(y_batch)
 					i=0
 				x, y = self._next_window(i, seq_len, ndim, normalise)
+				x = x.astype(float)
+				y = y.astype(float)
 				x_batch.append(x)
 				y_batch.append(y)
 				i += 1
