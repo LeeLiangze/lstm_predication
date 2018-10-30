@@ -103,10 +103,22 @@ class Model():
 			for j in range(prediction_len):
 				predicted.append(self.model.predict(curr_frame[newaxis,:,:])[0,:])
 				curr_frame = curr_frame[1:]
-				print('1111',curr_frame)
 				curr_frame = np.insert(curr_frame, [window_size-2], predicted[-1], axis=0)
-				print('2222',curr_frame)
-				exit()
+			prediction_seqs.append(predicted)
+		return prediction_seqs
+
+	def predict_load_model(self, data, window_size, prediction_len,model_name):
+		#Predict sequence of 50 steps before shifting prediction run forward by 50 steps
+		print('[Model] Predicting Sequences Multiple...')
+		model = load_model('./saved_models/' + model_name)
+		prediction_seqs = []
+		for i in range(int(len(data)/prediction_len)):
+			curr_frame = data[i*prediction_len].astype(float)
+			predicted = []
+			for j in range(prediction_len):
+				predicted.append(model.predict(curr_frame[newaxis,:,:])[0,:])
+				curr_frame = curr_frame[1:]
+				curr_frame = np.insert(curr_frame, [window_size-2], predicted[-1], axis=0)
 			prediction_seqs.append(predicted)
 		return prediction_seqs
 

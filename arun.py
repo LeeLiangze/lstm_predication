@@ -23,7 +23,6 @@ def main():
     )
 
     model = Model()
-    model.build_model(configs)
     x, y = data.get_train_data(
         seq_len=configs['data']['sequence_length'],
         ndim=configs['model']['layers'][0]['input_dim'],
@@ -40,18 +39,6 @@ def main():
 
     # out-of memory generative training
     steps_per_epoch = math.ceil((data.len_train - configs['data']['sequence_length']) / configs['training']['batch_size'])
-    model.train_generator(
-        data_gen=data.generate_train_batch(
-            seq_len=configs['data']['sequence_length'],
-            ndim=configs['model']['layers'][0]['input_dim'],
-            batch_size=configs['training']['batch_size'],
-            normalise=configs['data']['normalise']
-        ),
-        epochs=configs['training']['epochs'],
-        batch_size=configs['training']['batch_size'],
-        steps_per_epoch=steps_per_epoch,
-        save_dir = configs['model']['save_dir']
-    )
 
     # x_test, y_test = data.get_test_data(
     # 	seq_len = configs['data']['sequence_length'],
@@ -59,10 +46,12 @@ def main():
     # 	normalise = configs['data']['normalise']
     # )
 
-    predictions = model.predict_sequences_multiple(x, configs['data']['sequence_length'],configs['data']['sequence_length'])
-    # predictions = model.predict_sequences_multiple(x, configs['data']['sequence_length'],configs['data']['sequence_length'], 'config1.h5')
+    # predictions = model.predict_sequences_multiple(x, configs['data']['sequence_length'],configs['data']['sequence_length'])
+    predictions = model.predict_load_model(x, configs['data']['sequence_length'],configs['data']['sequence_length'], '0.h5')
     # predictions = model.predict_sequence_full(x_test, configs['data']['sequence_length'])
     # predictions = model.predict_point_by_point(x)
+    # for i in range(len(predictions)):
+    #     print(predictions[i][-1])
     print(predictions[-1])
 
 # plot_results_multiple(predictions, y_test, configs['data']['sequence_length'])

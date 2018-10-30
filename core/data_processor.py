@@ -63,6 +63,10 @@ class DataLoader():
 					yield np.array(x_batch), np.array(y_batch)
 					i=0
 				x, y = self._next_window(i, seq_len, ndim, normalise)
+				x = x.astype(float)
+				y = y.astype(float)
+				# print(x, y)
+				# exit()
 				x_batch.append(x)
 				y_batch.append(y)
 				i += 1
@@ -78,7 +82,7 @@ class DataLoader():
 			y = window[-1]
 		else:
 			# dim > 1
-			y = window[-1, :]
+			y = window[-1, [1]]
 		return x, y
 
 	def normalise_windows(self, window_data, ndim, single_window=False):

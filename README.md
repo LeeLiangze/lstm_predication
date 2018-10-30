@@ -25,3 +25,4 @@ cosine_proximity
 
 # activation
 exponential         20%  2+0
+linear
